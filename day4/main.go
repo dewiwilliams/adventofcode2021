@@ -67,16 +67,43 @@ func main() {
 	numbers, boards := getData()
 
 	fmt.Printf("Got numbers: %v\n", numbers)
-	fmt.Printf("Got board: %v\n", boards[0])
 
 	part1(numbers, boards)
+	part2(numbers, boards)
 }
 
+func remove(s []board, i int) []board {
+	s[i] = s[len(s)-1]
+	return s[:len(s)-1]
+}
+func part2(numbers []int, boards []board) {
+
+	workingSet := boards
+
+	for _, number := range numbers {
+		for true {
+			if index := numberCalled(workingSet, number); index != -1 {
+
+				if len(workingSet) == 1 {
+					fmt.Printf("Part 2 answer: %d\n", boards[index].getSumUnmarkedNumbers()*number)
+					return
+				}
+
+				workingSet = remove(workingSet, index)
+			} else {
+				break
+			}
+		}
+	}
+
+	fmt.Println("Impossible result")
+	os.Exit(2)
+}
 func part1(numbers []int, boards []board) {
 
 	for _, number := range numbers {
-		if bingo := numberCalled(boards, number); bingo != nil {
-			fmt.Printf("Part 1 answer: %d\n", bingo.getSumUnmarkedNumbers()*number)
+		if index := numberCalled(boards, number); index != -1 {
+			fmt.Printf("Part 1 answer: %d\n", boards[index].getSumUnmarkedNumbers()*number)
 			return
 		}
 	}
@@ -84,15 +111,15 @@ func part1(numbers []int, boards []board) {
 	fmt.Println("Impossible result")
 	os.Exit(2)
 }
-func numberCalled(boards []board, number int) *board {
+func numberCalled(boards []board, number int) int {
 	for i, _ := range boards {
 		boards[i].numberCalled(number)
 		if boards[i].isBingo() {
-			return &boards[i]
+			return i
 		}
 	}
 
-	return nil
+	return -1
 }
 func getData() ([]int, []board) {
 	numbers := []int{}
