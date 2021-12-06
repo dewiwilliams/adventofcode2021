@@ -14,6 +14,75 @@ func main() {
 	fmt.Printf("Max length: %d\n", maxLength)
 
 	part1(data, maxLength)
+	part2(data, maxLength)
+}
+func part2(data []int64, maxLength int) {
+
+	oxygenRating := getOxygenRating(data, maxLength)
+	scrubberRating := getScrubberRating(data, maxLength)
+
+	fmt.Printf("Part 2 result: %d\n", oxygenRating*scrubberRating)
+}
+func getScrubberRating(data []int64, maxLength int) int64 {
+	workingSet := data
+	for i := 0; i < maxLength; i++ {
+		bit := maxLength - i - 1
+		score := getDataSetScore(workingSet, bit)
+		workingSet = filterDataSet(workingSet, bit, score < 0)
+
+		if len(workingSet) == 1 {
+			return workingSet[0]
+		}
+	}
+
+	fmt.Println("Scrubber: Impossible result")
+	os.Exit(2)
+	return int64(0)
+}
+func getOxygenRating(data []int64, maxLength int) int64 {
+	workingSet := data
+	for i := 0; i < maxLength; i++ {
+		bit := maxLength - i - 1
+		score := getDataSetScore(workingSet, bit)
+		workingSet = filterDataSet(workingSet, bit, score >= 0)
+
+		if len(workingSet) == 1 {
+			return workingSet[0]
+		}
+	}
+
+	fmt.Println("Oxygen: Impossible result")
+	os.Exit(2)
+	return int64(0)
+}
+func filterDataSet(data []int64, bit int, state bool) []int64 {
+
+	result := []int64{}
+
+	testValue := int64(1 << bit)
+
+	for _, dataPoint := range data {
+		hasBit := (dataPoint & testValue) > 0
+		if hasBit == state {
+			result = append(result, dataPoint)
+		}
+	}
+
+	return result
+}
+func getDataSetScore(data []int64, bit int) int {
+	score := 0
+
+	testValue := int64(1 << bit)
+	for _, dataPoint := range data {
+		if (dataPoint & testValue) > 0 {
+			score++
+		} else {
+			score--
+		}
+	}
+
+	return score
 }
 func part1(data []int64, maxLength int) {
 
