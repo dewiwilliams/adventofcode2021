@@ -9,13 +9,54 @@ import (
 	"strings"
 )
 
+type dataItem struct {
+	command string
+	value   int
+}
+
 func main() {
 	data := getData()
+	parsedData := parseData(data)
 
-	fmt.Printf("Got data: %s\n", data)
+	part1(parsedData)
+	part2(parsedData)
+}
+func part2(data []dataItem) {
+	position := 0
+	aim := 0
+	depth := 0
 
+	for _, item := range data {
+		if item.command == "forward" {
+			position += item.value
+			depth += aim * item.value
+		} else if item.command == "up" {
+			aim -= item.value
+		} else if item.command == "down" {
+			aim += item.value
+		}
+	}
+
+	fmt.Printf("Part 1 result: %d\n", position*depth)
+}
+func part1(data []dataItem) {
 	position := 0
 	depth := 0
+
+	for _, item := range data {
+		if item.command == "forward" {
+			position += item.value
+		} else if item.command == "up" {
+			depth -= item.value
+		} else if item.command == "down" {
+			depth += item.value
+		}
+	}
+
+	fmt.Printf("Part 1 result: %d\n", position*depth)
+}
+func parseData(data []string) []dataItem {
+	result := []dataItem{}
 
 	for _, value := range data {
 		pieces := strings.Fields(value)
@@ -31,18 +72,15 @@ func main() {
 			os.Exit(2)
 		}
 
-		if pieces[0] == "forward" {
-			position += v
-		} else if pieces[0] == "up" {
-			depth -= v
-		} else if pieces[0] == "down" {
-			depth += v
+		item := dataItem{
+			command: pieces[0],
+			value:   v,
 		}
+		result = append(result, item)
 	}
 
-	fmt.Printf("Part 1 result: %d\n", position*depth)
+	return result
 }
-
 func getData() []string {
 	result := []string{}
 
