@@ -14,6 +14,16 @@ func main() {
 	fmt.Printf("Got data: %v\n", data)
 
 	part1(data)
+	part2(data)
+}
+func part2(values []int) {
+	workingSet := aggregateData(values)
+
+	for i := 0; i < 256; i++ {
+		workingSet = iterate(workingSet)
+	}
+
+	fmt.Printf("Total fish: %d\n", countFish(workingSet))
 }
 func part1(values []int) {
 	workingSet := aggregateData(values)
