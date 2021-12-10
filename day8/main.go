@@ -45,12 +45,6 @@ func runtimeAssert(state bool) {
 
 func main() {
 	data := getData()
-	//fmt.Printf("Got data: %v\n", data)
-
-	/*data := parseLine("acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf")
-	signalMapping, segmentMapping := getMappings(data)
-	fmt.Printf("Got signal mapping: %v\n", signalMapping)
-	fmt.Printf("Got segment mapping: %v\n", segmentMapping)*/
 
 	part1(data)
 	part2(data)
